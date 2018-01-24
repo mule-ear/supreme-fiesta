@@ -1,4 +1,5 @@
 *.[oa]
 *~
 *.db
-*__pycache__*
+*pycache*
+portageWalker/include/__pycache__/*
