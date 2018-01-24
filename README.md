@@ -9,8 +9,9 @@ Next step is to iterate through those tld's and grab the DESCRIPTION and populat
 
 # To do: 
 * ~~Populate the packages table~~
-* Add config file (for language, database name, etc.)
-* Add argparse for single packages/categories
+* ~~Add config file (for language, database name, etc.)~~
+* ~~Add argparse for single packages/categories~~
+* Command line client to work with the database. ATM the only function it has is generate new database
 * (The big one) Front end curses application
 
  
