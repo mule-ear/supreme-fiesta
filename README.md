@@ -8,7 +8,7 @@ The initial commit just creates a database of the top level categories - with th
 Next step is to iterate through those tld's and grab the DESCRIPTION and populate a new package table.
 
 # To do: 
-* Populate the packages table
+* ~~Populate the packages table~~
 * Add config file (for language, database name, etc.)
 * Add argparse for single packages/categories
 * (The big one) Front end curses application
