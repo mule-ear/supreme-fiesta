@@ -41,8 +41,8 @@ class dbPopulate():
         path = packageDir + packageName + '/'
     
         # search in path for a file called pname*ebuild
-        for entry in os.listdir(path):
-            if (os.path.isfile(os.path.join(path, entry)) and (packageName in entry) and ('ebuild' in entry)) :
+        for entry in self.os.listdir(path):
+            if (self.os.path.isfile(self.os.path.join(path, entry)) and (packageName in entry) and ('ebuild' in entry)) :
                 #print(os.path.join(path,entry), packageName, entry)
                 with open(path + entry, "r") as f:
                     # There's gotto be a cleaner way to do this
@@ -76,8 +76,8 @@ class dbPopulate():
 
             path = portDir + category[1] +'/'
         
-            for entry in os.listdir(path):
-                if (os.path.isdir(os.path.join(path, entry))):
+            for entry in self.os.listdir(path):
+                if (self.os.path.isdir(self.os.path.join(path, entry))):
                     description = self.getDescription(path,entry)
 
                     if description is not None and "'" in description:
