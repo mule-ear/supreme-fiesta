@@ -5,7 +5,9 @@ The goal here is to create a nice gentoo command line portage browser. Just disp
 
 The initial commit just creates a database of the top level categories - with the directory names and descriptions from the metadata.xml file located in those directories.
 
-Next step is to iterate through those tld's and grab the DESCRIPTION and populate a new package table.
+~~Next step is to iterate through those tld's and grab the DESCRIPTION and populate a new package table.~~
+
+The database is now populated. Now comes the hard part - creating an app that can browse the db.
 
 # To do: 
 * ~~Populate the packages table~~
