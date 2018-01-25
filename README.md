@@ -1,7 +1,7 @@
 # supreme-fiesta
 gentoo portage browser
 
-The goal here is to create a nice gentoo command line portage browser. Just display the descriptions of the packages available. I've been wanting one of these for a long time, just never sat down to write one.
+The goal here is to create a nice gentoo command line portage browser. Just display the descriptions of the packages available. I've been wanting one of these for a long time, just never sat down to write one. There's no reason that it can't pull more info from the ebuild files, like USE flags, but EIX already does that.
 
 The initial commit just creates a database of the top level categories - with the directory names and descriptions from the metadata.xml file located in those directories.
 
