@@ -7,14 +7,18 @@ The initial commit just creates a database of the top level categories - with th
 
 ~~Next step is to iterate through those tld's and grab the DESCRIPTION and populate a new package table.~~
 
-The database is now populated. Now comes the hard part - creating an app that can browse the db.
+~~The database is now populated. Now comes the hard part - creating an app that can browse the db.~~
+
+The start of a curses gui app. This is undoubtedly going to change significantly.
+If you run portwalk.py with a package name - it will display the description of all packages with that exact name. If you run it without a package name - it starts the gui. Right now, it just displays the categories in /usr/portage - along with the description shown in the status line. Ctrl-x to exit.
 
 # To do: 
 * ~~Populate the packages table~~
 * ~~Add config file (for language, database name, etc.)~~
 * ~~Add argparse for single packages/categories~~
-* Command line client to work with the database. ~~ATM the only function it has is generate new database~~
-* (The big one) Front end curses application
+* ~~Command line client to work with the database. ATM the only function it has is generate new database~~
+* ~~(The big one) Front end curses application~~
+* Get the curses app to display the contents of the sub-directories, the actual packages themselves.
 
 All of the command line switches can be set in the config file as well!
 # Usage:
