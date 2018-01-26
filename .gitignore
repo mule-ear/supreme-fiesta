@@ -3,3 +3,4 @@
 *.db
 *pycache*
 portageWalker/include/__pycache__/*
+*.pyc
