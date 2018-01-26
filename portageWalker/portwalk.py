@@ -26,10 +26,10 @@ def get_config_values(iDir):
     config = configparser.ConfigParser()
     config.read(iDir+'conf/portwalk.conf')
 
-    return (config['app']['log_level'],config['app']['lang'],config['app']['portDir']\
-    ,config['database']['name'],config['database']['location'], config.getboolean('app', 'newDB') )
+    return (config['app']['log_level'],config['app']['lang'],config['app']['portDir'], config.getboolean('app','homepage'),\
+    config['database']['name'],config['database']['location'], config.getboolean('app', 'newDB'))
 
-def get_cli_arguments(lvl,lang,dir1,db,dbDir,newDB):
+def get_cli_arguments(lvl,lang,dir1,db,dbDir,newDB, hp):
 
     parser = argparse.ArgumentParser(description='A command line portage browser')
     parser.add_argument("-L", "--log-level", default=lvl,
@@ -44,11 +44,13 @@ def get_cli_arguments(lvl,lang,dir1,db,dbDir,newDB):
                     help="Set the target location of the database")
     parser.add_argument('-g', '--generate', default=newDB, action='store_true',
                     help="Generate a new database.")
+    parser.add_argument('-H', '--homepage', default=hp, action='store_true',
+                    help="Show homepage in results.")
     parser.add_argument('package', nargs='?',
                     help="Specify package name")
     args = parser.parse_args()
     
-    return (args.log_level, args.language, args.directory, args.database, args.dbDir, args.generate, args.package)
+    return (args.log_level, args.language, args.directory, args.database, args.dbDir, args.generate, args.package, args.homepage)
 
 
 
@@ -61,10 +63,10 @@ if __name__ == "__main__":
     import include.populateDb as dbi, include.portageWalker as PW
     
     # Get some info: CLI arguments override config values
-    logLvl, lang, portageDir, db, dbDir, newDB  = get_config_values(installDir)
+    logLvl, lang, portageDir,hp, db, dbDir, newDB  = get_config_values(installDir)
     if dbDir == "HOME": # Easy way to choose $HOME dir
         dbDir = os.environ['HOME']+"/"
-    logLvl, lang, portageDir, dbName, dbDir, newDB, pkg = get_cli_arguments(logLvl, lang, portageDir, db, dbDir, newDB)
+    logLvl, lang, portageDir, dbName, dbDir, newDB, pkg , hp= get_cli_arguments(logLvl, lang, portageDir, db, dbDir, newDB, hp)
 
     numeric_level = getattr(logging, logLvl.upper(), None)
 
@@ -111,13 +113,23 @@ if __name__ == "__main__":
         con = sqlite3.connect(dbDir + dbName)
         cur = con.cursor()
 
-        stmnt = "SELECT tld.dir_name, name, packages.description FROM packages JOIN tld ON packages.parent = tld.id WHERE name = '"+ pkg +"';"
+        if hp:
+            stmnt = "SELECT tld.dir_name, name, packages.description, packages.homepage FROM packages JOIN tld ON packages.parent = tld.id WHERE name = '"+ pkg +"';"
+        else:
+            stmnt = "SELECT tld.dir_name, name, packages.description FROM packages JOIN tld ON packages.parent = tld.id WHERE name = '"+ pkg +"';"
         cur.execute(stmnt)
 
         results = cur.fetchall()
+
         for result in results:
             pretty_result = str(result[0])+"/" + str(result[1]) + ":   " +result[2].rstrip().strip('"')
             print(str(pretty_result))
+            if hp :
+                print(result[3].rstrip().strip('"'))
+
+        if not results:
+            print("Nothing appropriate found for " + pkg)
+            print("Please check your spelling, or re-run portwalk with '-g' option to rescan the portage directory")
 
         
 

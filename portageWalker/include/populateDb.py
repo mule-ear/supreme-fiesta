@@ -37,7 +37,9 @@ class dbPopulate():
 
         conn.commit()
 
-    def getDescription(self, packageDir, packageName):
+    def getData(self, packageDir, packageName):
+
+        # want to return description and hompage
         path = packageDir + packageName + '/'
     
         # search in path for a file called pname*ebuild
@@ -46,11 +48,20 @@ class dbPopulate():
                 #print(os.path.join(path,entry), packageName, entry)
                 with open(path + entry, "r") as f:
                     # There's gotto be a cleaner way to do this
+                    desc = ""
+                    hp = ""
                     g = f.readlines()
                     for line in g:
-                        if "DESCRIPTION" in line:
-                            f.close()
-                            return line.split("DESCRIPTION=")[1]
+                        if "DESCRIPTION=" in line:
+                            desc =  line.split("DESCRIPTION=")[1]
+                            desc = desc.rstrip().strip('"')
+                        elif "HOMEPAGE=" in line:
+                            hp = line.split("HOMEPAGE=")[1]
+                            hp = hp.replace("'","")
+                            hp = hp.rstrip().strip('"')
+                        
+                    f.close()
+                    return desc, hp
     
 
     def populatePackages(self,conn, c, portDir):
@@ -58,7 +69,7 @@ class dbPopulate():
 
         # Create the packages table
         c.execute("DROP TABLE IF EXISTS packages;")
-        c.execute("CREATE TABLE packages(id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT, name VARCHAR, parent INTEGER, description VARCHAR);")
+        c.execute("CREATE TABLE packages(id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT, name VARCHAR, parent INTEGER, description VARCHAR, homepage VARCHAR);")
     
         c.execute("SELECT COUNT(*) FROM tld")
         count=int(c.fetchone()[0])
@@ -78,14 +89,19 @@ class dbPopulate():
         
             for entry in self.os.listdir(path):
                 if (self.os.path.isdir(self.os.path.join(path, entry))):
-                    description = self.getDescription(path,entry)
+                    description, homepage = self.getData(path,entry)
 
                     if description is not None and "'" in description:
                         description = description.replace("'",chr(8217))
                     elif description is None:
                         description = "None"
+
+                    if homepage is None:
+                        description = "None"
                 
-                    c.execute("INSERT INTO packages(name,  parent, description) VALUES('" + entry + "',"+ str(parentId) + ", '"+description+"');")
+                    c.execute("INSERT INTO packages(name,  parent, description, homepage) VALUES('" + entry + "',"+ str(parentId) + ", '"+description+"', '"+ homepage + "' );")
+
+                    
             # 
             conn.commit()
             i+=1
